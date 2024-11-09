@@ -21,8 +21,10 @@ import uuid4 from "uuid4";
 export default function UploadPDF({children}:any) {
   const generateUploadURL=useMutation(api.fileStorage.generateUploadUrl)
   const InsertFileEntry=useMutation(api.fileStorage.AddFileEntrytoDB)
+  const getFileurl=useMutation(api.fileStorage.getFileURL)
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState('');
   const {user}=useUser()
 
   const OnFileSelect=(e:any)=>{
@@ -44,12 +46,16 @@ export default function UploadPDF({children}:any) {
     console.log(storageId);
     //Save the newely added storageId to db
     const fileId=uuid4()
+    const fileUrl=await getFileurl({storageId:storageId})
     const response=await InsertFileEntry({
       fileId:fileId,
       storageId:storageId,
-      fileName:file?.name || '',
+      fileName:fileName??'Untitled File',
+      fileURL:fileUrl || '',
       createdBy:user?.primaryEmailAddress?.emailAddress || ''
     })
+    console.log(response);
+    
 
     setLoading(false)
   }
@@ -71,7 +77,7 @@ export default function UploadPDF({children}:any) {
                     </div>
                     <div className="pt-3 shadow-lg ">
                         <label > FileName</label>
-                        <Input placeholder="Enter the name of the file" />
+                        <Input placeholder="Enter the name of the file" onChange={(e)=>setFileName(e.target.value)} />
 
                     </div>
                 </div>
