@@ -1,4 +1,5 @@
-import React from "react";
+'use client';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -11,8 +12,48 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Loader2Icon } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import uuid4 from "uuid4";
 
 export default function UploadPDF({children}:any) {
+  const generateUploadURL=useMutation(api.fileStorage.generateUploadUrl)
+  const InsertFileEntry=useMutation(api.fileStorage.AddFileEntrytoDB)
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const {user}=useUser()
+
+  const OnFileSelect=(e:any)=>{
+    setFile(e.target.files[0])
+  }
+  
+  const OnUpload=async()=>{
+    setLoading(true)
+    //get a short lived upload URL
+    const posturl=await generateUploadURL()
+
+    //Post the file to the URL
+    const result=await fetch(posturl,{
+      method:'POST',
+      headers:{"Content-Type":file?.type} as any,
+      body:file
+    })
+    const {storageId}=await result.json()
+    console.log(storageId);
+    //Save the newely added storageId to db
+    const fileId=uuid4()
+    const response=await InsertFileEntry({
+      fileId:fileId,
+      storageId:storageId,
+      fileName:file?.name || '',
+      createdBy:user?.primaryEmailAddress?.emailAddress || ''
+    })
+
+    setLoading(false)
+  }
+
   return (
     <div>
       <Dialog>
@@ -26,7 +67,7 @@ export default function UploadPDF({children}:any) {
                 <div className="p-1 ">
                     <div className="p-3 shadow-lg ">
                         <h2 className="pb-1">Select the file to upload</h2>
-                        <input type="file" accept="application/pdf" />
+                        <input type="file" accept="application/pdf" onChange={(e)=>OnFileSelect(e)} />
                     </div>
                     <div className="pt-3 shadow-lg ">
                         <label > FileName</label>
@@ -43,10 +84,15 @@ export default function UploadPDF({children}:any) {
               Close
             </Button>
           </DialogClose>
-          <Button>Upload</Button>
+          <Button onClick={OnUpload} >
+            {loading? <Loader2Icon className="animate-spin" />:"Upload"}
+
+            </Button>
         </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+
+
