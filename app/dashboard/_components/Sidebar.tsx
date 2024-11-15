@@ -6,7 +6,7 @@ import UploadPDF from "./UploadPDF";
 
 export default function Sidebar() {
   return <div className="shadow-sm h-screen p-5">
-    <Image src={'/logo.svg'} alt="logo" height={50} width={50} />
+    <Image src={'/logo.png'} alt="logo" height={50} width={50} />
     <div className="pt-4">
       <UploadPDF>
       <Button className="w-full">Upload PDF</Button>

@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
-const pdfURL="https://enduring-cuttlefish-717.convex.cloud/api/storage/5851a01f-2980-4b21-9b26-aa536ad12ddf"
 export async function GET(request: NextRequest) {
-    const response=await fetch(pdfURL)
+
+    const reqUrl=request.url
+    const {searchParams}:any=new URL(reqUrl)
+    const pdfUrl=searchParams.get('pdfUrl')
+    console.log(pdfUrl);
+    
+    const response=await fetch(pdfUrl)
     const data=await response.blob()
     const loader=new WebPDFLoader(data)
     const docs=await loader.load()
@@ -16,8 +21,9 @@ export async function GET(request: NextRequest) {
 
     //split the text into small chunks
     const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 10,
-        chunkOverlap: 1,
+        chunkSize: 1000,
+        chunkOverlap: 20
+        ,
       });
 
       const output = await textSplitter.createDocuments([Pdftextcontent]);
