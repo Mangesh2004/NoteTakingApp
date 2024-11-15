@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
       const output = await textSplitter.createDocuments([Pdftextcontent]);
 
-      let splitterList : any=[]
+      const splitterList : any=[]
         output.forEach((doc)=>{
             splitterList.push(doc.pageContent)
         })

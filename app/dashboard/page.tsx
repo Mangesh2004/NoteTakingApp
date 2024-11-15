@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 
-export default function page() {
+export default function Page() {
   const { user } = useUser();
   const createUser=useMutation(api.users.CreateUser)
   
