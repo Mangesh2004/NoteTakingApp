@@ -22,8 +22,7 @@ export async function GET(request: NextRequest) {
     //split the text into small chunks
     const textSplitter = new RecursiveCharacterTextSplitter({
         chunkSize: 100,
-        chunkOverlap: 5
-        ,
+        chunkOverlap: 20,
       });
 
       const output = await textSplitter.createDocuments([Pdftextcontent]);
