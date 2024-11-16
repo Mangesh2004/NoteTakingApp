@@ -40,15 +40,23 @@ export default function EditorExtinction({ editor }: any) {
     });
 
     const UnformattedAns=JSON.parse(result)
+    console.log(UnformattedAns);
+    
     let AllUnformattedAns=''
     UnformattedAns&&UnformattedAns.forEach((ans:any)=>{
       AllUnformattedAns=AllUnformattedAns+ans.pageContent
     })
+    console.log(AllUnformattedAns);
+    
 
     const Prompt="For Question: "+selectedText+"With the given content as answer please give an appropriate answer in HTML format. Note dont give me anything than answer I am rendering your answer directly on editor and there I want answer only nothing else no images etc. Also dont give me any commands and stick to question asked you give a lot of other info I want answer in short. The answer content is: "+AllUnformattedAns
+    // const Prompt="For Question: "+selectedText+"Give me answer on this"+AllUnformattedAns
 
     const AiModelResult=await chatSession.sendMessage(Prompt)
     const FinalAns= AiModelResult.response.text().replace('```','').replace('html','').replace('```','')
+    // const FinalAns= AiModelResult.response.text()
+    // console.log(FinalAns);
+    
 
     const Alltext=editor.getHTML()
     editor.commands.setContent(Alltext+'<p> <strong>Answer:</strong> '+FinalAns+'</p>')
