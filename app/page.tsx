@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center text-center py-16 bg-gradient-to-r from-gray-100 to-blue-50 h-screen">
       <h1 className="text-4xl md:text-5xl font-bold">
-        <span className="text-red-500">PDF</span>solution  <span className="text-blue-500"></span> with AI
+        <span className="text-red-500">PDF</span> solution  <span className="text-blue-500"></span> with AI
       </h1>
       <p className="mt-4 text-lg md:text-xl max-w-2xl text-gray-600">
         Elevate your note-taking experience with our AI-powered PDF app. Seamlessly extract key insights, summaries, and annotations from any PDF with just a few clicks.
