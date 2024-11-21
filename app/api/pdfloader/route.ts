@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     //split the text into small chunks
     const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
+        chunkSize: 1500,
         chunkOverlap: 20,
       });
 
